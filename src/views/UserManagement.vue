@@ -3,9 +3,11 @@
     <DataTable
       :data="userStore.users"
       :columns="columns"
+      :custom-actions="customActions"
       @add="handleAdd"
       @edit="handleEdit"
       @delete="handleDelete"
+      @custom-action="handleCustomAction"
     />
 
     <!-- 添加/编辑用户对话框 -->
@@ -51,6 +53,51 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 重置密码对话框 -->
+    <el-dialog
+      v-model="resetPasswordDialogVisible"
+      title="重置密码"
+      width="400px"
+    >
+      <p>确定要重置用户 "{{ currentUser?.username }}" 的密码吗？</p>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="resetPasswordDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmResetPassword">确定重置</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- 分配权限对话框 -->
+    <el-dialog
+      v-model="assignPermissionDialogVisible"
+      title="分配权限"
+      width="600px"
+    >
+      <div>
+        <p><strong>用户：</strong>{{ currentUser?.username }}</p>
+        <el-divider />
+        <el-checkbox-group v-model="selectedPermissions">
+          <el-checkbox
+            v-for="permission in permissionStore.permissions"
+            :key="permission.id"
+            :label="permission.id"
+            :value="permission.id"
+          >
+            {{ permission.name }} - {{ permission.description }}
+          </el-checkbox>
+        </el-checkbox-group>
+      </div>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="assignPermissionDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmAssignPermissions">确定分配</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </PageContainer>
 </template>
 
@@ -59,7 +106,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import DataTable from '../components/DataTable.vue'
 import PageContainer from '../components/PageContainer.vue'
-import { userStore } from '../store'
+import { userStore, permissionStore } from '../store'
 
 // 表格列配置
 const columns = [
@@ -69,13 +116,26 @@ const columns = [
   { prop: 'role', label: '角色', width: '120' },
   { prop: 'status', label: '状态', width: '100' },
   { prop: 'createTime', label: '创建时间', width: '120' },
-  { prop: 'actions', label: '操作', width: '150' }
+  { prop: 'actions', label: '操作', width: '250' }
+]
+
+// 自定义操作按钮配置
+const customActions = [
+  { key: 'resetPassword', label: '重置密码', type: 'warning' },
 ]
 
 // 对话框状态
 const dialogVisible = ref(false)
 const isEdit = ref(false)
 const formRef = ref()
+
+// 重置密码对话框状态
+const resetPasswordDialogVisible = ref(false)
+const currentUser = ref(null)
+
+// 分配权限对话框状态
+const assignPermissionDialogVisible = ref(false)
+const selectedPermissions = ref([])
 
 // 表单数据
 const form = reactive({
@@ -175,6 +235,38 @@ const handleSubmit = () => {
       resetForm()
     }
   })
+}
+
+// 处理自定义操作
+const handleCustomAction = (actionKey, row) => {
+  currentUser.value = row
+  if (actionKey === 'resetPassword') {
+    resetPasswordDialogVisible.value = true
+  } else if (actionKey === 'assignPermissions') {
+    // 获取用户当前权限
+    selectedPermissions.value = row.permissions || []
+    assignPermissionDialogVisible.value = true
+  }
+}
+
+// 确认重置密码
+const confirmResetPassword = () => {
+  if (userStore.resetPassword(currentUser.value.id)) {
+    ElMessage.success('密码重置成功')
+    resetPasswordDialogVisible.value = false
+  } else {
+    ElMessage.error('密码重置失败')
+  }
+}
+
+// 确认分配权限
+const confirmAssignPermissions = () => {
+  if (userStore.assignPermissions(currentUser.value.id, selectedPermissions.value)) {
+    ElMessage.success('权限分配成功')
+    assignPermissionDialogVisible.value = false
+  } else {
+    ElMessage.error('权限分配失败')
+  }
 }
 </script>
 

@@ -53,6 +53,16 @@
           >
             删除
           </el-button>
+          <!-- 自定义操作按钮 -->
+          <template v-for="action in customActions" :key="action.key">
+            <el-button
+              :type="action.type || 'default'"
+              size="small"
+              @click="handleCustomAction(action.key, scope.row)"
+            >
+              {{ action.label }}
+            </el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -84,10 +94,14 @@ const props = defineProps({
   columns: {
     type: Array,
     default: () => []
+  },
+  customActions: {
+    type: Array,
+    default: () => []
   }
 })
 
-const emit = defineEmits(['add', 'edit', 'delete'])
+const emit = defineEmits(['add', 'edit', 'delete', 'custom-action'])
 
 const searchText = ref('')
 const currentPage = ref(1)
@@ -131,6 +145,10 @@ const handleSizeChange = (val) => {
 
 const handleCurrentChange = (val) => {
   currentPage.value = val
+}
+
+const handleCustomAction = (actionKey, row) => {
+  emit('custom-action', actionKey, row)
 }
 </script>
 

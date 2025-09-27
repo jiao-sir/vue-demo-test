@@ -34,6 +34,25 @@ export const userStore = reactive({
   
   getUserById(id) {
     return this.users.find(user => user.id === id)
+  },
+  
+  resetPassword(id) {
+    const user = this.getUserById(id)
+    if (user) {
+      // 这里可以添加重置密码的逻辑，比如发送邮件等
+      console.log(`重置用户 ${user.username} 的密码`)
+      return true
+    }
+    return false
+  },
+  
+  assignPermissions(id, permissions) {
+    const user = this.getUserById(id)
+    if (user) {
+      user.permissions = permissions || []
+      return true
+    }
+    return false
   }
 })
 
