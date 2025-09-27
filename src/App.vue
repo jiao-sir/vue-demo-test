@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, onUnmounted, watch} from 'vue'
 import {useRouter, useRoute} from 'vue-router'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {
@@ -109,6 +109,43 @@ onMounted(() => {
   if (!isLoggedIn.value && route.path !== '/login') {
     router.push('/login')
   }
+})
+
+// 监听路由变化，检查登录状态
+watch(() => route.path, (newPath) => {
+  checkLoginStatus()
+  
+  // 如果未登录且不在登录页面，跳转到登录页
+  if (!isLoggedIn.value && newPath !== '/login') {
+    router.push('/login')
+  }
+})
+
+// 监听localStorage变化，实时更新登录状态
+const handleStorageChange = (e) => {
+  if (e.key === 'isLoggedIn' || e.key === 'username') {
+    checkLoginStatus()
+  }
+}
+
+// 监听登录状态变化事件
+const handleLoginStatusChange = (e) => {
+  if (e.detail) {
+    isLoggedIn.value = e.detail.isLoggedIn
+    username.value = e.detail.username
+  }
+}
+
+// 添加事件监听
+onMounted(() => {
+  window.addEventListener('storage', handleStorageChange)
+  window.addEventListener('loginStatusChanged', handleLoginStatusChange)
+})
+
+// 清理监听器
+onUnmounted(() => {
+  window.removeEventListener('storage', handleStorageChange)
+  window.removeEventListener('loginStatusChanged', handleLoginStatusChange)
 })
 </script>
 

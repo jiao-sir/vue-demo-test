@@ -104,6 +104,13 @@ const handleLogin = async () => {
         localStorage.setItem('username', loginForm.username)
         
         ElMessage.success('登录成功')
+        
+        // 触发自定义事件通知父组件登录状态变化
+        window.dispatchEvent(new CustomEvent('loginStatusChanged', {
+          detail: { isLoggedIn: true, username: loginForm.username }
+        }))
+        
+        // 跳转到仪表盘
         router.push('/')
       } else {
         ElMessage.error('用户名或密码错误')
