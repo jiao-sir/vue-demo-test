@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import UserManagement from '../views/UserManagement.vue'
 import PermissionManagement from '../views/PermissionManagement.vue'
 import DataSourceManagement from '../views/DataSourceManagement.vue'
+import DataValidationManagement from '../views/DataValidationManagement.vue'
 import Dashboard from '../views/Dashboard.vue'
 
 const routes = [
@@ -24,6 +25,11 @@ const routes = [
     path: '/datasources',
     name: 'DataSourceManagement',
     component: DataSourceManagement
+  },
+  {
+    path: '/data-validation',
+    name: 'DataValidationManagement',
+    component: DataValidationManagement
   }
 ]
 

@@ -7,7 +7,8 @@ import {
   Wallet,
   Monitor,
   Fold,
-  Expand
+  Expand,
+  Check
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -35,6 +36,11 @@ const menuItems = [
     index: '/datasources',
     title: '数据源管理',
     icon: Wallet
+  },
+  {
+    index: '/data-validation',
+    title: '数据校验管理',
+    icon: Check
   }
 ]
 

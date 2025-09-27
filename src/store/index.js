@@ -130,11 +130,61 @@ export const dataSourceStore = reactive({
 // 数据校验管理状态
 export const dataValidationStore = reactive({
   validations: [
-    { id: 1, name: '用户数据校验', type: '数据完整性', status: '成功', createTime: '2024-01-01', duration: '2.3s' },
-    { id: 2, name: '订单数据校验', type: '业务规则', status: '成功', createTime: '2024-01-02', duration: '1.8s' },
-    { id: 3, name: '库存数据校验', type: '数据一致性', status: '失败', createTime: '2024-01-03', duration: '3.2s' },
-    { id: 4, name: '财务数据校验', type: '数据准确性', status: '成功', createTime: '2024-01-04', duration: '4.1s' },
-    { id: 5, name: '日志数据校验', type: '数据完整性', status: '失败', createTime: '2024-01-05', duration: '1.5s' }
+    { 
+      id: 1, 
+      dataSourceA: 'MySQL主库', 
+      dataSourceB: 'PostgreSQL备库', 
+      type: '数据完整性', 
+      result: '成功', 
+      createTime: '2024-01-01', 
+      duration: '2.3s',
+      description: '用户表数据完整性校验',
+      errorMessage: null
+    },
+    { 
+      id: 2, 
+      dataSourceA: 'Redis缓存', 
+      dataSourceB: 'MySQL主库', 
+      type: '数据一致性', 
+      result: '成功', 
+      createTime: '2024-01-02', 
+      duration: '1.8s',
+      description: '订单缓存数据一致性校验',
+      errorMessage: null
+    },
+    { 
+      id: 3, 
+      dataSourceA: 'MySQL主库', 
+      dataSourceB: 'MongoDB日志库', 
+      type: '数据准确性', 
+      result: '失败', 
+      createTime: '2024-01-03', 
+      duration: '3.2s',
+      description: '库存数据准确性校验',
+      errorMessage: '数据不一致：发现3条记录存在差异'
+    },
+    { 
+      id: 4, 
+      dataSourceA: 'PostgreSQL备库', 
+      dataSourceB: 'MySQL主库', 
+      type: '业务规则', 
+      result: '成功', 
+      createTime: '2024-01-04', 
+      duration: '4.1s',
+      description: '财务数据业务规则校验',
+      errorMessage: null
+    },
+    { 
+      id: 5, 
+      dataSourceA: 'MongoDB日志库', 
+      dataSourceB: 'Redis缓存', 
+      type: '数据格式', 
+      result: '失败', 
+      createTime: '2024-01-05', 
+      duration: '1.5s',
+      description: '日志数据格式校验',
+      errorMessage: '数据格式不匹配：发现2条记录格式错误'
+    }
   ],
   
   addValidation(validation) {
