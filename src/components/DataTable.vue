@@ -41,6 +41,7 @@
         <template #default="scope" v-if="column.prop === 'actions'">
           <div class="action-buttons">
             <el-button
+              v-if="showEditDelete"
               type="primary"
               size="small"
               @click="handleEdit(scope.row)"
@@ -48,6 +49,7 @@
               编辑
             </el-button>
             <el-button
+              v-if="showEditDelete"
               type="danger"
               size="small"
               @click="handleDelete(scope.row)"
@@ -100,6 +102,10 @@ const props = defineProps({
   customActions: {
     type: Array,
     default: () => []
+  },
+  showEditDelete: {
+    type: Boolean,
+    default: true
   }
 })
 

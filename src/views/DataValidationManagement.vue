@@ -4,6 +4,7 @@
       :data="dataValidationStore.validations"
       :columns="columns"
       :custom-actions="customActions"
+      :show-edit-delete="false"
       @add="handleAdd"
       @edit="handleEdit"
       @delete="handleDelete"
@@ -144,8 +145,8 @@ const columns = [
 
 // 自定义操作按钮
 const customActions = [
-  { label: '重新校验', type: 'success', icon: 'Refresh' },
-  { label: '终止校验', type: 'danger', icon: 'Close' }
+  { key: 'revalidate', label: '重新校验', type: 'success', icon: 'Refresh' },
+  { key: 'terminate', label: '终止校验', type: 'danger', icon: 'Close' }
 ]
 
 // 对话框状态
@@ -218,12 +219,9 @@ const handleDelete = async (row) => {
 
 // 处理自定义操作
 const handleCustomAction = (action, row) => {
-  if (action.label === '查看详情') {
-    selectedValidation.value = row
-    resultDialogVisible.value = true
-  } else if (action.label === '重新校验') {
+  if (action.key === 'revalidate') {
     handleRevalidate(row)
-  } else if (action.label === '终止校验') {
+  } else if (action.key === 'terminate') {
     handleTerminateValidation(row)
   }
 }
