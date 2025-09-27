@@ -1,6 +1,7 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import {useRouter, useRoute} from 'vue-router'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import {
   User,
   Lock,
@@ -8,13 +9,17 @@ import {
   Monitor,
   Fold,
   Expand,
-  Check
+  Check,
+  SwitchButton,
+  Key
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
 
 const isCollapse = ref(false)
+const isLoggedIn = ref(false)
+const username = ref('')
 
 const menuItems = [
   {
@@ -51,48 +56,138 @@ const handleMenuSelect = (index) => {
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value
 }
+
+// 检查登录状态
+const checkLoginStatus = () => {
+  const loggedIn = localStorage.getItem('isLoggedIn')
+  const user = localStorage.getItem('username')
+  
+  if (loggedIn === 'true' && user) {
+    isLoggedIn.value = true
+    username.value = user
+  } else {
+    isLoggedIn.value = false
+    username.value = ''
+  }
+}
+
+// 退出登录
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm(
+      '确定要退出登录吗？',
+      '确认退出',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+    
+    localStorage.removeItem('isLoggedIn')
+    localStorage.removeItem('username')
+    isLoggedIn.value = false
+    username.value = ''
+    
+    ElMessage.success('已退出登录')
+    router.push('/login')
+  } catch {
+    // 用户取消操作
+  }
+}
+
+// 修改密码
+const handleChangePassword = () => {
+  ElMessage.info('修改密码功能开发中...')
+}
+
+// 组件挂载时检查登录状态
+onMounted(() => {
+  checkLoginStatus()
+  
+  // 如果未登录且不在登录页面，跳转到登录页
+  if (!isLoggedIn.value && route.path !== '/login') {
+    router.push('/login')
+  }
+})
 </script>
 
 <template>
-  <div class="app-container">
-    <!-- 侧边栏 -->
-    <div class="sidebar" :class="{ collapsed: isCollapse }">
-      <div class="sidebar-header">
-        <h2 v-if="!isCollapse">管理系统</h2>
+  <!-- 登录页面 -->
+  <div v-if="route.path === '/login'">
+    <router-view/>
+  </div>
+  
+  <!-- 主应用界面 -->
+  <div v-else-if="isLoggedIn" class="app-container">
+    <!-- 顶部导航栏 -->
+    <div class="top-navbar">
+      <div class="navbar-left">
+        <h3>管理系统</h3>
+      </div>
+      <div class="navbar-right">
+        <span class="welcome-text">欢迎，{{ username }}</span>
         <el-button
-            type="text"
-            @click="toggleCollapse"
-            class="collapse-btn"
+          type="primary"
+          size="small"
+          :icon="Key"
+          @click="handleChangePassword"
+          class="action-btn"
         >
-          <el-icon>
-            <Expand v-if="isCollapse"/>
-            <Fold v-else/>
-          </el-icon>
+          修改密码
+        </el-button>
+        <el-button
+          type="danger"
+          size="small"
+          :icon="SwitchButton"
+          @click="handleLogout"
+          class="action-btn"
+        >
+          退出登录
         </el-button>
       </div>
-
-      <el-menu
-          :default-active="route.path"
-          :collapse="isCollapse"
-          @select="handleMenuSelect"
-          class="sidebar-menu"
-      >
-        <el-menu-item
-            v-for="item in menuItems"
-            :key="item.index"
-            :index="item.index"
-        >
-          <el-icon>
-            <component :is="item.icon"/>
-          </el-icon>
-          <template #title>{{ item.title }}</template>
-        </el-menu-item>
-      </el-menu>
     </div>
 
-    <!-- 主内容区 -->
-    <div class="main-content" :class="{ expanded: isCollapse }">
-      <router-view/>
+    <div class="main-layout">
+      <!-- 侧边栏 -->
+      <div class="sidebar" :class="{ collapsed: isCollapse }">
+        <div class="sidebar-header">
+          <h2 v-if="!isCollapse">管理系统</h2>
+          <el-button
+              type="text"
+              @click="toggleCollapse"
+              class="collapse-btn"
+          >
+            <el-icon>
+              <Expand v-if="isCollapse"/>
+              <Fold v-else/>
+            </el-icon>
+          </el-button>
+        </div>
+
+        <el-menu
+            :default-active="route.path"
+            :collapse="isCollapse"
+            @select="handleMenuSelect"
+            class="sidebar-menu"
+        >
+          <el-menu-item
+              v-for="item in menuItems"
+              :key="item.index"
+              :index="item.index"
+          >
+            <el-icon>
+              <component :is="item.icon"/>
+            </el-icon>
+            <template #title>{{ item.title }}</template>
+          </el-menu-item>
+        </el-menu>
+      </div>
+
+      <!-- 主内容区 -->
+      <div class="main-content" :class="{ expanded: isCollapse }">
+        <router-view/>
+      </div>
     </div>
   </div>
 </template>
@@ -117,8 +212,50 @@ html, body, #app {
 <style scoped>
 .app-container {
   display: flex;
+  flex-direction: column;
   height: 100vh; /* 铺满浏览器高度 */
   width: 100vw; /* 铺满浏览器宽度 */
+}
+
+/* 顶部导航栏 */
+.top-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  background-color: #fff;
+  border-bottom: 1px solid #e4e7ed;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-left h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.welcome-text {
+  color: #666;
+  font-size: 14px;
+}
+
+.action-btn {
+  margin-left: 5px;
+}
+
+/* 主布局 */
+.main-layout {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 60px);
 }
 
 .sidebar {
