@@ -253,10 +253,10 @@ const handleDelete = async (row) => {
 }
 
 // 处理自定义操作
-const handleCustomAction = (action, row) => {
-  if (action.key === 'revalidate') {
+const handleCustomAction = (actionKey, row) => {
+  if (actionKey === 'revalidate') {
     handleRevalidate(row)
-  } else if (action.key === 'terminate') {
+  } else if (actionKey === 'terminate') {
     currentValidation.value = row
     terminateDialogVisible.value = true
   }
