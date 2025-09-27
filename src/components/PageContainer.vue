@@ -23,7 +23,8 @@ defineProps({
 
 <style scoped>
 .page-container {
-  height: 100%;
+  height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -60,11 +61,7 @@ defineProps({
   padding: 24px;
   overflow-y: auto;
   background-color: #fafafa;
-}
-
-/* 确保内容区域有最小高度 */
-.page-content {
-  min-height: calc(100vh - 140px); /* 减去header高度和padding */
+  height: calc(100vh - 80px); /* 减去header高度 */
 }
 
 /* 响应式设计 */
@@ -79,7 +76,7 @@ defineProps({
   
   .page-content {
     padding: 16px;
-    min-height: calc(100vh - 120px);
+    height: calc(100vh - 100px);
   }
   
   .page-title {

@@ -8,7 +8,9 @@
         <el-card class="stat-card user-card">
           <div class="stat-header">
             <div class="stat-icon user-icon">
-              <el-icon><User /></el-icon>
+              <el-icon>
+                <User/>
+              </el-icon>
             </div>
             <div class="stat-title">用户统计</div>
           </div>
@@ -28,7 +30,9 @@
         <el-card class="stat-card datasource-card">
           <div class="stat-header">
             <div class="stat-icon datasource-icon">
-              <el-icon><Wallet /></el-icon>
+              <el-icon>
+                <Wallet/>
+              </el-icon>
             </div>
             <div class="stat-title">数据源统计</div>
           </div>
@@ -48,7 +52,9 @@
         <el-card class="stat-card validation-card">
           <div class="stat-header">
             <div class="stat-icon validation-icon">
-              <el-icon><Check /></el-icon>
+              <el-icon>
+                <Check/>
+              </el-icon>
             </div>
             <div class="stat-title">数据校验统计</div>
           </div>
@@ -72,7 +78,9 @@
         <el-card class="stat-card migration-card">
           <div class="stat-header">
             <div class="stat-icon migration-icon">
-              <el-icon><Upload /></el-icon>
+              <el-icon>
+                <Upload/>
+              </el-icon>
             </div>
             <div class="stat-title">数据迁移统计</div>
           </div>
@@ -100,7 +108,9 @@
       <div class="actions-grid">
         <el-card class="action-card" @click="$router.push('/users')">
           <div class="action-content">
-            <el-icon class="action-icon"><User /></el-icon>
+            <el-icon class="action-icon">
+              <User/>
+            </el-icon>
             <h3>用户管理</h3>
             <p>管理系统用户</p>
           </div>
@@ -108,7 +118,9 @@
 
         <el-card class="action-card" @click="$router.push('/permissions')">
           <div class="action-content">
-            <el-icon class="action-icon"><Lock /></el-icon>
+            <el-icon class="action-icon">
+              <Lock/>
+            </el-icon>
             <h3>权限管理</h3>
             <p>管理系统权限</p>
           </div>
@@ -116,7 +128,9 @@
 
         <el-card class="action-card" @click="$router.push('/datasources')">
           <div class="action-content">
-            <el-icon class="action-icon"><Wallet /></el-icon>
+            <el-icon class="action-icon">
+              <Wallet/>
+            </el-icon>
             <h3>数据源管理</h3>
             <p>管理数据源连接</p>
           </div>
@@ -169,9 +183,11 @@ const migrationFailed = computed(() => dataMigrationStore.migrations.filter(m =>
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(4, minmax(260px, 1fr));
   gap: 20px;
+  width: 100%;
 }
+
 
 /* 统计卡片 */
 .stat-card {
@@ -336,23 +352,29 @@ const migrationFailed = computed(() => dataMigrationStore.migrations.filter(m =>
 }
 
 /* 响应式设计 */
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .actions-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .stat-header {
     padding: 15px;
   }
-  
+
   .stat-content {
     padding: 15px;
   }
-  
+
   .action-content {
     padding: 20px 15px;
   }
@@ -362,15 +384,15 @@ const migrationFailed = computed(() => dataMigrationStore.migrations.filter(m =>
   .section-title {
     font-size: 18px;
   }
-  
+
   .stat-title {
     font-size: 14px;
   }
-  
+
   .stat-number {
     font-size: 20px;
   }
-  
+
   .action-content h3 {
     font-size: 16px;
   }

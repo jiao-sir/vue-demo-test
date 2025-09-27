@@ -101,12 +101,17 @@ const toggleCollapse = () => {
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 #app {
   height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 </style>
 
@@ -171,8 +176,11 @@ body {
 
 .main-content {
   flex: 1;
+  height: 100vh;
   overflow-y: auto;
   background-color: white;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 全局样式重置 */
