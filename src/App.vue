@@ -2,7 +2,6 @@
 import {ref} from 'vue'
 import {useRouter, useRoute} from 'vue-router'
 import {
-  Menu as IconMenu,
   User,
   Lock,
   Wallet,
@@ -10,7 +9,6 @@ import {
   Fold,
   Expand
 } from '@element-plus/icons-vue'
-
 
 const router = useRouter()
 const route = useRoute()
@@ -101,25 +99,20 @@ const toggleCollapse = () => {
   box-sizing: border-box;
 }
 
-html, body {
+html, body, #app {
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-#app {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  overflow: hidden; /* 防止出现多余滚动条 */
 }
 </style>
 
 <style scoped>
 .app-container {
   display: flex;
-  height: 100vh;
-  background-color: #f5f5f5;
+  height: 100vh; /* 铺满浏览器高度 */
+  width: 100vw; /* 铺满浏览器宽度 */
 }
 
 .sidebar {
@@ -177,14 +170,30 @@ html, body {
   color: white;
 }
 
+/* 🔥 优化后的右侧内容区 */
 .main-content {
   flex: 1;
-  min-width: 0; /* 防止flex子元素溢出 */
-  height: 100vh;
-  overflow-y: auto;
-  background-color: white;
+  background-color: #f9fafb;
+  height: 100%;
+  overflow: auto;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
+}
+
+.main-content > * {
+  flex: 1;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 避免 el-row 默认的 margin 导致居中 */
+:deep(.el-row) {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 /* 响应式设计 */
@@ -193,7 +202,7 @@ html, body {
     width: 200px;
     min-width: 200px;
   }
-  
+
   .sidebar.collapsed {
     width: 64px;
     min-width: 64px;
@@ -204,32 +213,32 @@ html, body {
   .app-container {
     flex-direction: column;
   }
-  
+
   .sidebar {
     width: 100%;
     height: auto;
     min-height: 60px;
   }
-  
+
   .sidebar.collapsed {
     width: 100%;
     min-width: 100%;
   }
-  
+
   .sidebar-header h2 {
     font-size: 16px;
   }
-  
+
   .main-content {
     height: calc(100vh - 60px);
   }
-  
+
   .sidebar-menu {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
   }
-  
+
   .sidebar-menu .el-menu-item {
     flex-shrink: 0;
     border-bottom: none;
@@ -241,11 +250,11 @@ html, body {
   .sidebar-header {
     padding: 0 15px;
   }
-  
+
   .sidebar-header h2 {
     font-size: 14px;
   }
-  
+
   .sidebar-menu .el-menu-item {
     padding: 0 15px;
   }
