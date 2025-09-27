@@ -25,6 +25,7 @@ defineProps({
 .page-container {
   height: 100vh;
   width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -62,9 +63,36 @@ defineProps({
   overflow-y: auto;
   background-color: #fafafa;
   height: calc(100vh - 80px); /* 减去header高度 */
+  min-height: 0; /* 防止flex子元素溢出 */
 }
 
 /* 响应式设计 */
+@media (max-width: 1200px) {
+  .page-header {
+    padding: 20px 20px 0 20px;
+  }
+  
+  .page-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .page-header {
+    padding: 18px 18px 0 18px;
+    min-height: 70px;
+  }
+  
+  .page-content {
+    padding: 18px;
+    height: calc(100vh - 70px);
+  }
+  
+  .page-title {
+    font-size: 22px;
+  }
+}
+
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;
@@ -81,6 +109,46 @@ defineProps({
   
   .page-title {
     font-size: 20px;
+  }
+  
+  .page-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .page-content {
+    padding: 12px;
+    height: calc(100vh - 80px);
+  }
+  
+  .page-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .page-actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 320px) {
+  .page-header {
+    padding: 8px;
+  }
+  
+  .page-content {
+    padding: 8px;
+  }
+  
+  .page-title {
+    font-size: 16px;
   }
 }
 </style>

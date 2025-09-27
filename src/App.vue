@@ -124,13 +124,16 @@ html, body {
 
 .sidebar {
   width: 250px;
+  min-width: 250px;
   background-color: #304156;
-  transition: width 0.3s;
+  transition: all 0.3s ease;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .sidebar.collapsed {
   width: 64px;
+  min-width: 64px;
 }
 
 .sidebar-header {
@@ -176,11 +179,76 @@ html, body {
 
 .main-content {
   flex: 1;
+  min-width: 0; /* 防止flex子元素溢出 */
   height: 100vh;
   overflow-y: auto;
   background-color: white;
   display: flex;
   flex-direction: column;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  .sidebar.collapsed {
+    width: 64px;
+    min-width: 64px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: 60px;
+  }
+  
+  .sidebar.collapsed {
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .sidebar-header h2 {
+    font-size: 16px;
+  }
+  
+  .main-content {
+    height: calc(100vh - 60px);
+  }
+  
+  .sidebar-menu {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  
+  .sidebar-menu .el-menu-item {
+    flex-shrink: 0;
+    border-bottom: none;
+    border-right: 1px solid #263445;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-header {
+    padding: 0 15px;
+  }
+  
+  .sidebar-header h2 {
+    font-size: 14px;
+  }
+  
+  .sidebar-menu .el-menu-item {
+    padding: 0 15px;
+  }
 }
 
 /* 全局样式重置 */
