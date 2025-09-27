@@ -126,12 +126,18 @@ const handleLogin = async () => {
 
 <style scoped>
 .login-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 .login-box {
@@ -141,6 +147,8 @@ const handleLogin = async () => {
   padding: 40px;
   width: 100%;
   max-width: 400px;
+  margin: 20px;
+  box-sizing: border-box;
 }
 
 .login-header {
@@ -181,5 +189,37 @@ const handleLogin = async () => {
 
 :deep(.el-checkbox) {
   color: #666;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 10px;
+  }
+  
+  .login-box {
+    padding: 30px 20px;
+    margin: 10px;
+    max-width: 100%;
+  }
+  
+  .login-header h2 {
+    font-size: 20px;
+  }
+  
+  .login-header p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    padding: 20px 15px;
+    margin: 5px;
+  }
+  
+  .login-header h2 {
+    font-size: 18px;
+  }
 }
 </style>

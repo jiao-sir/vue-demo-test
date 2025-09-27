@@ -241,7 +241,7 @@ onUnmounted(() => {
 
 <template>
   <!-- 登录页面 -->
-  <div v-if="route.path === '/login'">
+  <div v-if="route.path === '/login'" class="login-page">
     <router-view/>
   </div>
   
@@ -385,6 +385,16 @@ html, body, #app {
   margin: 0;
   padding: 0;
   overflow: hidden; /* 防止出现多余滚动条 */
+}
+
+/* 登录页面全屏样式 */
+.login-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 </style>
 
