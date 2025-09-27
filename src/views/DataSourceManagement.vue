@@ -3,9 +3,11 @@
     <DataTable
       :data="dataSourceStore.dataSources"
       :columns="columns"
+      :custom-actions="customActions"
       @add="handleAdd"
       @edit="handleEdit"
       @delete="handleDelete"
+      @custom-action="handleCustomAction"
     />
 
     <!-- 添加/编辑数据源对话框 -->
@@ -78,7 +80,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button @click="testConnection" :loading="testing">测试连接</el-button>
+<!--          <el-button @click="testConnection" :loading="testing">测试连接</el-button>-->
           <el-button type="primary" @click="handleSubmit">确定</el-button>
         </span>
       </template>
@@ -103,7 +105,12 @@ const columns = [
   { prop: 'database', label: '数据库', minWidth: '120' },
   { prop: 'status', label: '状态', width: '100' },
   { prop: 'createTime', label: '创建时间', width: '120' },
-  { prop: 'actions', label: '操作', width: '150' }
+  { prop: 'actions', label: '操作', width: '200' }
+]
+
+// 自定义操作按钮配置
+const customActions = [
+  { key: 'testConnection', label: '测试连接', type: 'primary' }
 ]
 
 // 对话框状态
@@ -210,7 +217,7 @@ const handleDelete = (row) => {
   })
 }
 
-// 测试连接
+// 测试连接（从表单）
 const testConnection = () => {
   formRef.value.validate((valid) => {
     if (valid) {
@@ -229,6 +236,34 @@ const testConnection = () => {
       }, 2000)
     }
   })
+}
+
+// 测试连接（从表格行数据）
+const testConnectionFromRow = (row) => {
+  testing.value = true
+  ElMessage.info(`正在测试数据源 "${row.name}" 的连接...`)
+  
+  // 模拟测试连接
+  setTimeout(() => {
+    testing.value = false
+    const success = Math.random() > 0.3 // 70% 成功率
+    if (success) {
+      // 更新数据源状态
+      dataSourceStore.updateDataSource(row.id, { status: '连接正常' })
+      ElMessage.success(`数据源 "${row.name}" 连接测试成功`)
+    } else {
+      // 更新数据源状态
+      dataSourceStore.updateDataSource(row.id, { status: '连接异常' })
+      ElMessage.error(`数据源 "${row.name}" 连接测试失败，请检查配置`)
+    }
+  }, 2000)
+}
+
+// 处理自定义操作
+const handleCustomAction = (actionKey, row) => {
+  if (actionKey === 'testConnection') {
+    testConnectionFromRow(row)
+  }
 }
 
 // 提交表单

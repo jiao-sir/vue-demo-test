@@ -39,30 +39,32 @@
         :min-width="column.minWidth"
       >
         <template #default="scope" v-if="column.prop === 'actions'">
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleEdit(scope.row)"
-          >
-            编辑
-          </el-button>
-          <el-button
-            type="danger"
-            size="small"
-            @click="handleDelete(scope.row)"
-          >
-            删除
-          </el-button>
-          <!-- 自定义操作按钮 -->
-          <template v-for="action in customActions" :key="action.key">
+          <div class="action-buttons">
             <el-button
-              :type="action.type || 'default'"
+              type="primary"
               size="small"
-              @click="handleCustomAction(action.key, scope.row)"
+              @click="handleEdit(scope.row)"
             >
-              {{ action.label }}
+              编辑
             </el-button>
-          </template>
+            <el-button
+              type="danger"
+              size="small"
+              @click="handleDelete(scope.row)"
+            >
+              删除
+            </el-button>
+            <!-- 自定义操作按钮 -->
+            <template v-for="action in customActions" :key="action.key">
+              <el-button
+                :type="action.type || 'default'"
+                size="small"
+                @click="handleCustomAction(action.key, scope.row)"
+              >
+                {{ action.label }}
+              </el-button>
+            </template>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -168,5 +170,12 @@ const handleCustomAction = (actionKey, row) => {
   margin-top: 20px;
   display: flex;
   justify-content: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 </style>
