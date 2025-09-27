@@ -21,6 +21,39 @@ const isCollapse = ref(false)
 const isLoggedIn = ref(false)
 const username = ref('')
 
+// 修改密码对话框状态
+const changePasswordDialogVisible = ref(false)
+const passwordForm = ref({
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+const passwordFormRef = ref()
+
+// 密码表单验证规则
+const passwordRules = {
+  currentPassword: [
+    { required: true, message: '请输入当前密码', trigger: 'blur' }
+  ],
+  newPassword: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' }
+  ],
+  confirmPassword: [
+    { required: true, message: '请确认新密码', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value !== passwordForm.value.newPassword) {
+          callback(new Error('两次输入的密码不一致'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ]
+}
+
 const menuItems = [
   {
     index: '/',
@@ -98,7 +131,52 @@ const handleLogout = async () => {
 
 // 修改密码
 const handleChangePassword = () => {
-  ElMessage.info('修改密码功能开发中...')
+  // 重置表单
+  passwordForm.value = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  }
+  changePasswordDialogVisible.value = true
+}
+
+// 确认修改密码
+const confirmChangePassword = async () => {
+  if (!passwordFormRef.value) return
+  
+  try {
+    await passwordFormRef.value.validate()
+    
+    // 模拟验证当前密码（实际项目中应该调用API）
+    if (passwordForm.value.currentPassword !== '123456') {
+      ElMessage.error('当前密码错误')
+      return
+    }
+    
+    // 模拟修改密码请求
+    ElMessage.success('密码修改成功')
+    changePasswordDialogVisible.value = false
+    
+    // 重置表单
+    passwordForm.value = {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    }
+  } catch (error) {
+    console.error('密码修改验证失败:', error)
+  }
+}
+
+// 取消修改密码
+const cancelChangePassword = () => {
+  changePasswordDialogVisible.value = false
+  // 重置表单
+  passwordForm.value = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  }
 }
 
 // 组件挂载时检查登录状态
@@ -226,6 +304,58 @@ onUnmounted(() => {
         <router-view/>
       </div>
     </div>
+    
+    <!-- 修改密码对话框 -->
+    <el-dialog
+      v-model="changePasswordDialogVisible"
+      title="修改密码"
+      width="500px"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        ref="passwordFormRef"
+        :model="passwordForm"
+        :rules="passwordRules"
+        label-width="100px"
+      >
+        <el-form-item label="当前密码" prop="currentPassword">
+          <el-input
+            v-model="passwordForm.currentPassword"
+            type="password"
+            placeholder="请输入当前密码"
+            show-password
+            clearable
+          />
+        </el-form-item>
+        
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input
+            v-model="passwordForm.newPassword"
+            type="password"
+            placeholder="请输入新密码"
+            show-password
+            clearable
+          />
+        </el-form-item>
+        
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input
+            v-model="passwordForm.confirmPassword"
+            type="password"
+            placeholder="请再次输入新密码"
+            show-password
+            clearable
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="cancelChangePassword">取消</el-button>
+          <el-button type="primary" @click="confirmChangePassword">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -443,5 +573,12 @@ html, body, #app {
 /* 全局样式重置 */
 :deep(.el-menu--collapse .el-menu-item) {
   padding: 0 20px !important;
+}
+
+/* 对话框样式 */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 </style>
