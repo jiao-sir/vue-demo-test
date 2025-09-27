@@ -138,6 +138,7 @@ export const dataValidationStore = reactive({
       result: '成功', 
       createTime: '2024-01-01 10:30:15', 
       completeTime: '2024-01-01 10:32:38',
+      duration: '143.0s',
       description: '用户表数据完整性校验',
       errorMessage: null
     },
@@ -149,6 +150,7 @@ export const dataValidationStore = reactive({
       result: '成功', 
       createTime: '2024-01-02 14:20:10', 
       completeTime: '2024-01-02 14:21:58',
+      duration: '108.0s',
       description: '订单缓存数据一致性校验',
       errorMessage: null
     },
@@ -160,6 +162,7 @@ export const dataValidationStore = reactive({
       result: '失败', 
       createTime: '2024-01-03 09:15:25', 
       completeTime: '2024-01-03 09:18:45',
+      duration: '200.0s',
       description: '库存数据准确性校验',
       errorMessage: '数据不一致：发现3条记录存在差异'
     },
@@ -171,6 +174,7 @@ export const dataValidationStore = reactive({
       result: '成功', 
       createTime: '2024-01-04 16:45:30', 
       completeTime: '2024-01-04 16:49:41',
+      duration: '251.0s',
       description: '财务数据业务规则校验',
       errorMessage: null
     },
@@ -182,6 +186,7 @@ export const dataValidationStore = reactive({
       result: '失败', 
       createTime: '2024-01-05 11:30:20', 
       completeTime: '2024-01-05 11:31:50',
+      duration: '90.0s',
       description: '日志数据格式校验',
       errorMessage: '数据格式不匹配：发现2条记录格式错误'
     }

@@ -92,7 +92,7 @@
           </el-descriptions-item>
           <el-descriptions-item label="校验时间">{{ selectedValidation.createTime }}</el-descriptions-item>
           <el-descriptions-item label="完成时间">{{ selectedValidation.completeTime || '未完成' }}</el-descriptions-item>
-          <el-descriptions-item label="耗时">{{ calculateDuration(selectedValidation.createTime, selectedValidation.completeTime) }}</el-descriptions-item>
+          <el-descriptions-item label="耗时">{{ selectedValidation.duration }}</el-descriptions-item>
           <el-descriptions-item label="描述" :span="2">{{ selectedValidation.description || '无' }}</el-descriptions-item>
         </el-descriptions>
         
@@ -142,14 +142,7 @@ const columns = [
   },
   { prop: 'createTime', label: '校验时间', width: 120 },
   { prop: 'completeTime', label: '完成时间', width: 120 },
-  { 
-    prop: 'duration', 
-    label: '耗时', 
-    width: 80,
-    formatter: (row) => {
-      return calculateDuration(row.createTime, row.completeTime)
-    }
-  },
+  { prop: 'duration', label: '耗时', width: 80 },
   { prop: 'actions', label: '操作', width: '200' }
 ]
 
@@ -268,9 +261,11 @@ const handleRevalidate = async (row) => {
       // 随机生成校验结果
       const isSuccess = Math.random() > 0.3
       const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
+      const duration = (Math.random() * 5 + 1).toFixed(1) + 's'
       
       dataValidationStore.updateValidation(row.id, {
         result: isSuccess ? '成功' : '失败',
+        duration: duration,
         completeTime: completeTime,
         errorMessage: isSuccess ? null : '数据不一致：发现3条记录存在差异'
       })
@@ -299,6 +294,7 @@ const handleTerminateValidation = async (row) => {
     const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
     dataValidationStore.updateValidation(row.id, {
       result: '已终止',
+      duration: '0.0s',
       completeTime: completeTime,
       errorMessage: '校验已被用户手动终止'
     })
@@ -335,6 +331,7 @@ const handleSubmit = async () => {
         type: form.type,
         description: form.description,
         result: '处理中',
+        duration: '0.0s',
         createTime: createTime,
         completeTime: null,
         errorMessage: null
@@ -343,13 +340,18 @@ const handleSubmit = async () => {
       ElMessage.success('校验任务已创建，正在处理中...')
       
       // 模拟异步校验过程，30-100秒后更新结果
-      const delay = Math.random() * 70 + 30 // 30-100秒
+      const delay = Math.random() * 7 + 3 // 30-100秒
       setTimeout(() => {
         const isSuccess = Math.random() > 0.3
         const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
         
+        // 计算实际耗时（秒）
+        const actualDuration = delay
+        const durationText = actualDuration.toFixed(1) + 's'
+        
         dataValidationStore.updateValidation(validationId, {
           result: isSuccess ? '成功' : '失败',
+          duration: durationText,
           completeTime: completeTime,
           errorMessage: isSuccess ? null : '数据不一致：发现2条记录存在差异'
         })
@@ -362,29 +364,6 @@ const handleSubmit = async () => {
     resetForm()
   } catch (error) {
     console.error('表单验证失败:', error)
-  }
-}
-
-// 计算耗时
-const calculateDuration = (createTime, completeTime) => {
-  if (!completeTime) {
-    return '0.0s'
-  }
-  
-  try {
-    const start = new Date(createTime)
-    const end = new Date(completeTime)
-    const durationMs = end.getTime() - start.getTime()
-    const durationSeconds = durationMs / 1000
-    
-    if (durationSeconds < 0) {
-      return '0.0s'
-    }
-    
-    return durationSeconds.toFixed(1) + 's'
-  } catch (error) {
-    console.error('计算耗时失败:', error)
-    return '0.0s'
   }
 }
 
