@@ -11,7 +11,8 @@ import {
   Expand,
   Check,
   SwitchButton,
-  Key
+  Key,
+  Upload
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -79,6 +80,11 @@ const menuItems = [
     index: '/data-validation',
     title: '数据校验管理',
     icon: Check
+  },
+  {
+    index: '/data-migration',
+    title: '数据迁移管理',
+    icon: Upload
   }
 ]
 

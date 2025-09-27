@@ -3,6 +3,7 @@ import UserManagement from '../views/UserManagement.vue'
 import PermissionManagement from '../views/PermissionManagement.vue'
 import DataSourceManagement from '../views/DataSourceManagement.vue'
 import DataValidationManagement from '../views/DataValidationManagement.vue'
+import DataMigrationManagement from '../views/DataMigrationManagement.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 
@@ -36,6 +37,11 @@ const routes = [
     path: '/data-validation',
     name: 'DataValidationManagement',
     component: DataValidationManagement
+  },
+  {
+    path: '/data-migration',
+    name: 'DataMigrationManagement',
+    component: DataMigrationManagement
   }
 ]
 
