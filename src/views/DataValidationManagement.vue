@@ -91,7 +91,8 @@
             </el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="校验时间">{{ selectedValidation.createTime }}</el-descriptions-item>
-          <el-descriptions-item label="耗时">{{ selectedValidation.duration }}</el-descriptions-item>
+          <el-descriptions-item label="完成时间">{{ selectedValidation.completeTime || '未完成' }}</el-descriptions-item>
+          <el-descriptions-item label="耗时">{{ calculateDuration(selectedValidation.createTime, selectedValidation.completeTime) }}</el-descriptions-item>
           <el-descriptions-item label="描述" :span="2">{{ selectedValidation.description || '无' }}</el-descriptions-item>
         </el-descriptions>
         
@@ -131,22 +132,43 @@ const columns = [
   { 
     prop: 'result', 
     label: '校验结果', 
-    width: 100,
+    width: 120,
     formatter: (row) => {
       if (row.result === '成功') return '成功'
       if (row.result === '已终止') return '已终止'
+      if (row.result === '处理中') return '处理中 ⏳'
       return '失败'
     }
   },
   { prop: 'createTime', label: '校验时间', width: 120 },
-  { prop: 'duration', label: '耗时', width: 80 },
+  { prop: 'completeTime', label: '完成时间', width: 120 },
+  { 
+    prop: 'duration', 
+    label: '耗时', 
+    width: 80,
+    formatter: (row) => {
+      return calculateDuration(row.createTime, row.completeTime)
+    }
+  },
   { prop: 'actions', label: '操作', width: '200' }
 ]
 
 // 自定义操作按钮
 const customActions = [
-  { key: 'revalidate', label: '重新校验', type: 'success', icon: 'Refresh' },
-  { key: 'terminate', label: '终止校验', type: 'danger', icon: 'Close' }
+  { 
+    key: 'revalidate', 
+    label: '重新校验', 
+    type: 'success', 
+    icon: 'Refresh',
+    disabled: (row) => row.result === '处理中'
+  },
+  { 
+    key: 'terminate', 
+    label: '终止校验', 
+    type: 'danger', 
+    icon: 'Close',
+    disabled: (row) => row.result === '处理中'
+  }
 ]
 
 // 对话框状态
@@ -245,12 +267,11 @@ const handleRevalidate = async (row) => {
     setTimeout(() => {
       // 随机生成校验结果
       const isSuccess = Math.random() > 0.3
-      const duration = (Math.random() * 5 + 1).toFixed(1) + 's'
+      const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
       
       dataValidationStore.updateValidation(row.id, {
         result: isSuccess ? '成功' : '失败',
-        duration: duration,
-        createTime: new Date().toISOString().split('T')[0],
+        completeTime: completeTime,
         errorMessage: isSuccess ? null : '数据不一致：发现3条记录存在差异'
       })
       
@@ -275,10 +296,10 @@ const handleTerminateValidation = async (row) => {
     )
     
     // 更新校验状态为已终止
+    const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
     dataValidationStore.updateValidation(row.id, {
       result: '已终止',
-      duration: '0.0s',
-      createTime: new Date().toISOString().split('T')[0],
+      completeTime: completeTime,
       errorMessage: '校验已被用户手动终止'
     })
     
@@ -304,20 +325,37 @@ const handleSubmit = async () => {
       })
       ElMessage.success('更新成功')
     } else {
-      // 生成随机校验结果
-      const isSuccess = Math.random() > 0.3
-      const duration = (Math.random() * 5 + 1).toFixed(1) + 's'
-      
+      // 添加校验记录，初始状态为处理中
+      const validationId = Date.now()
+      const createTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
       dataValidationStore.addValidation({
+        id: validationId,
         dataSourceA: form.dataSourceA,
         dataSourceB: form.dataSourceB,
         type: form.type,
         description: form.description,
-        result: isSuccess ? '成功' : '失败',
-        duration: duration,
-        errorMessage: isSuccess ? null : '数据不一致：发现2条记录存在差异'
+        result: '处理中',
+        createTime: createTime,
+        completeTime: null,
+        errorMessage: null
       })
-      ElMessage.success('添加成功')
+      
+      ElMessage.success('校验任务已创建，正在处理中...')
+      
+      // 模拟异步校验过程，30-100秒后更新结果
+      const delay = Math.random() * 70 + 30 // 30-100秒
+      setTimeout(() => {
+        const isSuccess = Math.random() > 0.3
+        const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
+        
+        dataValidationStore.updateValidation(validationId, {
+          result: isSuccess ? '成功' : '失败',
+          completeTime: completeTime,
+          errorMessage: isSuccess ? null : '数据不一致：发现2条记录存在差异'
+        })
+        
+        ElMessage.info(`校验完成：${isSuccess ? '成功' : '失败'}`)
+      }, delay * 1000)
     }
     
     dialogVisible.value = false
@@ -327,10 +365,34 @@ const handleSubmit = async () => {
   }
 }
 
+// 计算耗时
+const calculateDuration = (createTime, completeTime) => {
+  if (!completeTime) {
+    return '0.0s'
+  }
+  
+  try {
+    const start = new Date(createTime)
+    const end = new Date(completeTime)
+    const durationMs = end.getTime() - start.getTime()
+    const durationSeconds = durationMs / 1000
+    
+    if (durationSeconds < 0) {
+      return '0.0s'
+    }
+    
+    return durationSeconds.toFixed(1) + 's'
+  } catch (error) {
+    console.error('计算耗时失败:', error)
+    return '0.0s'
+  }
+}
+
 // 获取结果标签类型
 const getResultTagType = (result) => {
   if (result === '成功') return 'success'
   if (result === '已终止') return 'warning'
+  if (result === '处理中') return 'info'
   return 'danger'
 }
 

@@ -136,8 +136,8 @@ export const dataValidationStore = reactive({
       dataSourceB: 'PostgreSQL备库', 
       type: '数据完整性', 
       result: '成功', 
-      createTime: '2024-01-01', 
-      duration: '2.3s',
+      createTime: '2024-01-01 10:30:15', 
+      completeTime: '2024-01-01 10:32:38',
       description: '用户表数据完整性校验',
       errorMessage: null
     },
@@ -147,8 +147,8 @@ export const dataValidationStore = reactive({
       dataSourceB: 'MySQL主库', 
       type: '数据一致性', 
       result: '成功', 
-      createTime: '2024-01-02', 
-      duration: '1.8s',
+      createTime: '2024-01-02 14:20:10', 
+      completeTime: '2024-01-02 14:21:58',
       description: '订单缓存数据一致性校验',
       errorMessage: null
     },
@@ -158,8 +158,8 @@ export const dataValidationStore = reactive({
       dataSourceB: 'MongoDB日志库', 
       type: '数据准确性', 
       result: '失败', 
-      createTime: '2024-01-03', 
-      duration: '3.2s',
+      createTime: '2024-01-03 09:15:25', 
+      completeTime: '2024-01-03 09:18:45',
       description: '库存数据准确性校验',
       errorMessage: '数据不一致：发现3条记录存在差异'
     },
@@ -169,8 +169,8 @@ export const dataValidationStore = reactive({
       dataSourceB: 'MySQL主库', 
       type: '业务规则', 
       result: '成功', 
-      createTime: '2024-01-04', 
-      duration: '4.1s',
+      createTime: '2024-01-04 16:45:30', 
+      completeTime: '2024-01-04 16:49:41',
       description: '财务数据业务规则校验',
       errorMessage: null
     },
@@ -180,8 +180,8 @@ export const dataValidationStore = reactive({
       dataSourceB: 'Redis缓存', 
       type: '数据格式', 
       result: '失败', 
-      createTime: '2024-01-05', 
-      duration: '1.5s',
+      createTime: '2024-01-05 11:30:20', 
+      completeTime: '2024-01-05 11:31:50',
       description: '日志数据格式校验',
       errorMessage: '数据格式不匹配：发现2条记录格式错误'
     }
@@ -189,9 +189,9 @@ export const dataValidationStore = reactive({
   
   addValidation(validation) {
     const newValidation = {
-      id: Date.now(),
+      id: validation.id || Date.now(),
       ...validation,
-      createTime: new Date().toISOString().split('T')[0]
+      createTime: validation.createTime || new Date().toISOString().split('T')[0]
     }
     this.validations.push(newValidation)
   },
