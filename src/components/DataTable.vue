@@ -15,7 +15,7 @@
           </template>
         </el-input>
       </div>
-      <div class="action-buttons">
+      <div class="action-buttons" v-if="showAdd">
         <el-button type="primary" @click="handleAdd">
           <el-icon><Plus /></el-icon>
           添加
@@ -29,6 +29,7 @@
       style="width: 100%"
       border
       stripe
+      @row-click="handleRowClick"
     >
       <el-table-column
         v-for="column in columns"
@@ -106,10 +107,14 @@ const props = defineProps({
   showEditDelete: {
     type: Boolean,
     default: true
+  },
+  showAdd: {
+    type: Boolean,
+    default: true
   }
 })
 
-const emit = defineEmits(['add', 'edit', 'delete', 'custom-action'])
+const emit = defineEmits(['add', 'edit', 'delete', 'custom-action', 'row-click'])
 
 const searchText = ref('')
 const currentPage = ref(1)
@@ -157,6 +162,10 @@ const handleCurrentChange = (val) => {
 
 const handleCustomAction = (actionKey, row) => {
   emit('custom-action', actionKey, row)
+}
+
+const handleRowClick = (row) => {
+  emit('row-click', row)
 }
 </script>
 

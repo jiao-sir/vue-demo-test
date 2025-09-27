@@ -257,3 +257,42 @@ export const dataMigrationStore = reactive({
     return this.migrations.find(migration => migration.id === id)
   }
 })
+
+// 审计日志管理状态
+export const auditLogStore = reactive({
+  auditLogs: [],
+  
+  addAuditLog(log) {
+    const newLog = {
+      id: log.id || Date.now(),
+      ...log,
+      operationTime: log.operationTime || new Date().toISOString().replace('T', ' ').substring(0, 19)
+    }
+    this.auditLogs.unshift(newLog) // 新日志添加到开头
+  },
+  
+  deleteAuditLog(id) {
+    const index = this.auditLogs.findIndex(log => log.id === id)
+    if (index !== -1) {
+      this.auditLogs.splice(index, 1)
+    }
+  },
+  
+  getAuditLogById(id) {
+    return this.auditLogs.find(log => log.id === id)
+  },
+  
+  // 记录用户操作
+  recordUserAction(userId, username, module, action, description, result = '成功', ipAddress = '127.0.0.1') {
+    this.addAuditLog({
+      userId,
+      username,
+      module,
+      action,
+      description,
+      result,
+      ipAddress,
+      userAgent: navigator.userAgent
+    })
+  }
+})
