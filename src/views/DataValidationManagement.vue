@@ -113,6 +113,22 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 终止校验对话框 -->
+    <el-dialog
+      v-model="terminateDialogVisible"
+      title="终止校验"
+      width="400px"
+    >
+      <p>确定要终止校验 "{{ currentValidation?.dataSourceA }} vs {{ currentValidation?.dataSourceB }}" 吗？</p>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="terminateDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmTerminateValidation">确定终止</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </PageContainer>
 </template>
 
@@ -170,6 +186,10 @@ const resultDialogVisible = ref(false)
 const isEdit = ref(false)
 const formRef = ref()
 const selectedValidation = ref(null)
+
+// 终止校验对话框状态
+const terminateDialogVisible = ref(false)
+const currentValidation = ref(null)
 
 // 表单数据
 const form = reactive({
@@ -237,7 +257,8 @@ const handleCustomAction = (action, row) => {
   if (action.key === 'revalidate') {
     handleRevalidate(row)
   } else if (action.key === 'terminate') {
-    handleTerminateValidation(row)
+    currentValidation.value = row
+    terminateDialogVisible.value = true
   }
 }
 
@@ -277,32 +298,18 @@ const handleRevalidate = async (row) => {
   }
 }
 
-// 终止校验
-const handleTerminateValidation = async (row) => {
-  try {
-    await ElMessageBox.confirm(
-      `确定要终止校验 "${row.dataSourceA} vs ${row.dataSourceB}" 吗？`,
-      '确认终止校验',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    
-    // 更新校验状态为已终止
-    const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
-    dataValidationStore.updateValidation(row.id, {
-      result: '已终止',
-      duration: '0.0s',
-      completeTime: completeTime,
-      errorMessage: '校验已被用户手动终止'
-    })
-    
-    ElMessage.success('校验已终止')
-  } catch {
-    // 用户取消操作
-  }
+// 确认终止校验
+const confirmTerminateValidation = () => {
+  const completeTime = new Date().toISOString().replace('T', ' ').substring(0, 19)
+  dataValidationStore.updateValidation(currentValidation.value.id, {
+    result: '已终止',
+    duration: '0.0s',
+    completeTime: completeTime,
+    errorMessage: '校验已被用户手动终止'
+  })
+  
+  ElMessage.success('校验已终止')
+  terminateDialogVisible.value = false
 }
 
 // 提交表单
