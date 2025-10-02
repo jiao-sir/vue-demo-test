@@ -56,11 +56,11 @@ export const userStore = reactive({
   }
 })
 
-// 权限管理状态
+// 角色管理状态
 export const permissionStore = reactive({
   permissions: [
     { id: 1, name: '用户管理', code: 'user:manage', description: '用户增删改查权限', status: '启用', createTime: '2024-01-01' },
-    { id: 2, name: '权限管理', code: 'permission:manage', description: '权限增删改查权限', status: '启用', createTime: '2024-01-01' },
+    { id: 2, name: '角色管理', code: 'permission:manage', description: '权限增删改查权限', status: '启用', createTime: '2024-01-01' },
     { id: 3, name: '数据源管理', code: 'datasource:manage', description: '数据源增删改查权限', status: '启用', createTime: '2024-01-01' }
   ],
   
@@ -133,7 +133,7 @@ export const dataValidationStore = reactive({
     { 
       id: 1, 
       dataSourceA: 'MySQL主库', 
-      dataSourceB: 'PostgreSQL备库', 
+      dataSourceB: 'MySQL主库备库',
       type: '数据完整性', 
       result: '成功', 
       createTime: '2024-01-01 10:30:15', 
@@ -153,42 +153,6 @@ export const dataValidationStore = reactive({
       duration: '108.0s',
       description: '订单缓存数据一致性校验',
       errorMessage: null
-    },
-    { 
-      id: 3, 
-      dataSourceA: 'MySQL主库', 
-      dataSourceB: 'MongoDB日志库', 
-      type: '数据准确性', 
-      result: '失败', 
-      createTime: '2024-01-03 09:15:25', 
-      completeTime: '2024-01-03 09:18:45',
-      duration: '200.0s',
-      description: '库存数据准确性校验',
-      errorMessage: '数据不一致：发现3条记录存在差异'
-    },
-    { 
-      id: 4, 
-      dataSourceA: 'PostgreSQL备库', 
-      dataSourceB: 'MySQL主库', 
-      type: '业务规则', 
-      result: '成功', 
-      createTime: '2024-01-04 16:45:30', 
-      completeTime: '2024-01-04 16:49:41',
-      duration: '251.0s',
-      description: '财务数据业务规则校验',
-      errorMessage: null
-    },
-    { 
-      id: 5, 
-      dataSourceA: 'MongoDB日志库', 
-      dataSourceB: 'Redis缓存', 
-      type: '数据格式', 
-      result: '失败', 
-      createTime: '2024-01-05 11:30:20', 
-      completeTime: '2024-01-05 11:31:50',
-      duration: '90.0s',
-      description: '日志数据格式校验',
-      errorMessage: '数据格式不匹配：发现2条记录格式错误'
     }
   ],
   

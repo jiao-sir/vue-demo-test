@@ -1,5 +1,5 @@
 <template>
-  <PageContainer title="权限管理">
+  <PageContainer title="角色管理">
     <DataTable
       :data="permissionStore.permissions"
       :columns="columns"
@@ -11,7 +11,7 @@
     <!-- 添加/编辑权限对话框 -->
     <el-dialog
       v-model="dialogVisible"
-      :title="isEdit ? '编辑权限' : '添加权限'"
+      :title="isEdit ? '编辑角色' : '添加角色'"
       width="500px"
     >
       <el-form
@@ -20,20 +20,20 @@
         :rules="rules"
         label-width="80px"
       >
-        <el-form-item label="权限名称" prop="name">
+        <el-form-item label="角色名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入权限名称" />
         </el-form-item>
         
-        <el-form-item label="权限代码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入权限代码，如：user:manage" />
+        <el-form-item label="角色权限" prop="code">
+          <el-input v-model="form.code" placeholder="请输入权限代码，如：user" />
         </el-form-item>
         
-        <el-form-item label="权限描述" prop="description">
+        <el-form-item label="角色描述" prop="description">
           <el-input
             v-model="form.description"
             type="textarea"
             :rows="3"
-            placeholder="请输入权限描述"
+            placeholder="请输入角色描述"
           />
         </el-form-item>
         
@@ -65,9 +65,9 @@ import { permissionStore } from '../store'
 // 表格列配置
 const columns = [
   { prop: 'id', label: 'ID', width: '80' },
-  { prop: 'name', label: '权限名称', minWidth: '120' },
-  { prop: 'code', label: '权限代码', minWidth: '150' },
-  { prop: 'description', label: '权限描述', minWidth: '200' },
+  { prop: 'name', label: '角色名称', minWidth: '120' },
+  { prop: 'code', label: '角色权限', minWidth: '150' },
+  { prop: 'description', label: '角色描述', minWidth: '200' },
   { prop: 'status', label: '状态', width: '100' },
   { prop: 'createTime', label: '创建时间', width: '120' },
   { prop: 'actions', label: '操作', width: '150' }

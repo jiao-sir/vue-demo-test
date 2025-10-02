@@ -80,7 +80,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-<!--          <el-button @click="testConnection" :loading="testing">测试连接</el-button>-->
+          <el-button @click="testConnection" :loading="testing">测试连接</el-button>
           <el-button type="primary" @click="handleSubmit">确定</el-button>
         </span>
       </template>

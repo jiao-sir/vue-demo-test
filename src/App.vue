@@ -69,7 +69,7 @@ const menuItems = [
   },
   {
     index: '/permissions',
-    title: '权限管理',
+    title: '角色管理',
     icon: Lock
   },
   {

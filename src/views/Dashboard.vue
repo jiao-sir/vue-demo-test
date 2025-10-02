@@ -121,7 +121,7 @@
             <el-icon class="action-icon">
               <Lock/>
             </el-icon>
-            <h3>权限管理</h3>
+            <h3>角色管理</h3>
             <p>管理系统权限</p>
           </div>
         </el-card>
@@ -133,6 +133,35 @@
             </el-icon>
             <h3>数据源管理</h3>
             <p>管理数据源连接</p>
+          </div>
+        </el-card>
+        <el-card class="action-card" @click="$router.push('/data-validation')">
+          <div class="action-content">
+            <el-icon class="action-icon">
+              <Check/>
+            </el-icon>
+            <h3>数据校验管理</h3>
+            <p>管理数据校验任务</p>
+          </div>
+        </el-card>
+
+        <el-card class="action-card" @click="$router.push('/data-migration')">
+          <div class="action-content">
+            <el-icon class="action-icon">
+              <Upload/>
+            </el-icon>
+            <h3>数据迁移管理</h3>
+            <p>管理数据迁移任务</p>
+          </div>
+        </el-card>
+
+        <el-card class="action-card" @click="$router.push('/audit-log')">
+          <div class="action-content">
+            <el-icon class="action-icon">
+              <Check/>
+            </el-icon>
+            <h3>日志审计管理</h3>
+            <p>管理日志审计数据</p>
           </div>
         </el-card>
       </div>

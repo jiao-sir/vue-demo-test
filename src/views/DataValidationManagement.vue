@@ -23,8 +23,8 @@
           :rules="rules"
           label-width="120px"
       >
-        <el-form-item label="数据源A名称" prop="dataSourceA">
-          <el-select v-model="form.dataSourceA" placeholder="请选择数据源A" style="width: 100%">
+        <el-form-item label="源数据" prop="dataSourceA">
+          <el-select v-model="form.dataSourceA" placeholder="请选择数源数据" style="width: 100%">
             <el-option
                 v-for="ds in dataSourceStore.dataSources"
                 :key="ds.id"
@@ -34,8 +34,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="数据源B名称" prop="dataSourceB">
-          <el-select v-model="form.dataSourceB" placeholder="请选择数据源B" style="width: 100%">
+        <el-form-item label="目标数据" prop="dataSourceB">
+          <el-select v-model="form.dataSourceB" placeholder="请选择目标数据" style="width: 100%">
             <el-option
                 v-for="ds in dataSourceStore.dataSources"
                 :key="ds.id"
@@ -82,8 +82,8 @@
       <div v-if="selectedValidation">
         <el-descriptions :column="2" border>
           <el-descriptions-item label="校验ID">{{ selectedValidation.id }}</el-descriptions-item>
-          <el-descriptions-item label="数据源A">{{ selectedValidation.dataSourceA }}</el-descriptions-item>
-          <el-descriptions-item label="数据源B">{{ selectedValidation.dataSourceB }}</el-descriptions-item>
+          <el-descriptions-item label="源数据">{{ selectedValidation.dataSourceA }}</el-descriptions-item>
+          <el-descriptions-item label="目标数据">{{ selectedValidation.dataSourceB }}</el-descriptions-item>
           <el-descriptions-item label="校验类型">{{ selectedValidation.type }}</el-descriptions-item>
           <el-descriptions-item label="校验结果">
             <el-tag :type="getResultTagType(selectedValidation.result)">
@@ -148,8 +148,8 @@ import DataTable from '../components/DataTable.vue'
 // 表格列配置
 const columns = [
   {prop: 'id', label: 'ID', width: 80},
-  {prop: 'dataSourceA', label: '数据源A', width: 120},
-  {prop: 'dataSourceB', label: '数据源B', width: 120},
+  {prop: 'dataSourceA', label: '源数据', width: 120},
+  {prop: 'dataSourceB', label: '目标数据', width: 120},
   {prop: 'type', label: '校验类型', width: 120},
   {
     prop: 'result',

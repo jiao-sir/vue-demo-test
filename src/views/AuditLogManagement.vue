@@ -30,7 +30,7 @@
               style="width: 150px"
             >
               <el-option label="用户管理" value="用户管理" />
-              <el-option label="权限管理" value="权限管理" />
+              <el-option label="角色管理" value="角色管理" />
               <el-option label="数据源管理" value="数据源管理" />
               <el-option label="数据校验管理" value="数据校验管理" />
               <el-option label="数据迁移管理" value="数据迁移管理" />
@@ -305,7 +305,7 @@ onMounted(() => {
       id: 6,
       userId: 1,
       username: 'admin',
-      module: '权限管理',
+      module: '角色管理',
       action: '编辑',
       operationTime: new Date(now.getTime() - 600000).toISOString().replace('T', ' ').substring(0, 19),
       ipAddress: '192.168.1.100',
